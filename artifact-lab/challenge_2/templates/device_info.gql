@@ -15,23 +15,23 @@ query device_info($device: String!) {
         interfaces {
           edges {
             node {
+              id
               name {
-                value
-              }
-              enabled {
                 value
               }
               description {
                 value
               }
+              role {
+                value
+              }
               mtu {
                 value
               }
-              ... on DcimInterfaceL2 {
-                id
-                role {
-                  value
-                }
+              status {
+                value
+              }
+              ... on InterfacePhysical {
                 l2_mode {
                   value
                 }
@@ -44,14 +44,6 @@ query device_info($device: String!) {
                       value
                     }
                   }
-                }
-              }
-              ... on DcimInterfaceL3 {
-                name {
-                  value
-                }
-                role {
-                  value
                 }
                 ip_addresses {
                   edges {

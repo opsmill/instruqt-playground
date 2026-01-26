@@ -38,13 +38,13 @@ interface {{ intf.node.name.value }}
 {%      if intf.node.description.value %}
    description "{{ intf.node.description.value }}"
 {%      endif %}
-{%      if not intf.node.enabled.value %}
+{%      if not intf.node.status.value == "active" %}
    shutdown
 {%      endif %}
 {%      if intf.node.mtu.value %}
    mtu {{ intf.node.mtu.value }}
 {%      endif %}
-{%      if intf.node.ip_addresses %}
+{%      if intf.node.ip_addresses.edges %}
 {%         for ip in intf.node.ip_addresses.edges %}
    no switchport
    ip address {{ ip.node.address.value  }}
@@ -54,9 +54,9 @@ interface {{ intf.node.name.value }}
 {%         endfor %}
 {%      else %}
 {%         if intf.node.l2_mode %}
-{%             if intf.node.l2_mode.value == "Access" %}
+{%             if intf.node.l2_mode.value == "access" %}
    switchport access vlan {{ intf.node.untagged_vlan.node.vlan_id.value }}
-{%             elif intf.node.l2_mode.value == "Trunk" %}
+{%             elif intf.node.l2_mode.value == "trunk" %}
    switchport mode trunk
 {%             endif %}
 {%             if intf.node.tagged_vlan.edges %}

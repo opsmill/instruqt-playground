@@ -9,23 +9,23 @@ query device_info($device: String!) {
         interfaces {
           edges {
             node {
+              id
               mtu {
                 value
               }
               name {
                 value
               }
-              enabled {
-                value
-              }
               description {
                 value
               }
-              ... on DcimInterfaceL2 {
-                id
-                role {
-                  value
-                }
+              role {
+                value
+              }
+              status {
+                value
+              }
+              ... on InterfacePhysical {
                 untagged_vlan {
                   node {
                     vlan_id {
@@ -50,15 +50,6 @@ query device_info($device: String!) {
                       }
                     }
                   }
-                }
-              }
-              ... on DcimInterfaceL3 {
-                id
-                name {
-                  id
-                }
-                role {
-                  value
                 }
                 ip_addresses {
                   edges {

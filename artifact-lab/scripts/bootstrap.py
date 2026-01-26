@@ -35,19 +35,19 @@ DROPDOWNS = [
         "color": "#ff1111",
     },
     {
-        "kind": "DcimInterfaceL3",
+        "kind": "DcimInterface",
         "attribute": "role",
         "option": "host",
         "label": "Host",
         "color": "#02f4fc",
     },
     {
-        "kind": "DcimInterfaceL2",
+        "kind": "DcimInterface",
         "attribute": "role",
-        "option": "host",
-        "label": "Host",
+        "option": "peer",
+        "label": "Peer",
         "color": "#02f4fc",
-    }
+    },
 ]
 
 PREFIXES = [
@@ -88,15 +88,15 @@ INTERFACE_TEMPLATES = {
             "speed": 1000,
             "role": "peer",
             "description": "Connected to peer switch",
-            "kind": "DcimInterfaceL3",
+            "kind": "InterfacePhysical",
         },
         {
             "name": "Ethernet2",
             "speed": 1000,
             "role": "host",
             "description": "Connected to host",
-            "kind": "DcimInterfaceL2",
-            "l2_mode": "Access",
+            "kind": "InterfacePhysical",
+            "l2_mode": "access",
             "speed": 1000,
             "vlan": "Client",
         },
@@ -107,15 +107,15 @@ INTERFACE_TEMPLATES = {
             "speed": 1000,
             "role": "peer",
             "description": "Connected to peer switch",
-            "kind": "DcimInterfaceL3",
+            "kind": "InterfacePhysical",
         },
         {
             "name": "Ethernet2",
             "speed": 1000,
-            "role": "server",
+            "role": "host",
             "description": "Connected to server",
-            "kind": "DcimInterfaceL2",
-            "l2_mode": "Access",
+            "kind": "InterfacePhysical",
+            "l2_mode": "access",
             "speed": 1000,
             "vlan": "Server",
         },
@@ -356,7 +356,7 @@ async def create_devices(
 
 
 async def create_link(client: InfrahubClient, log: logging.Logger, branch: str) -> None:
-    interfaces = await client.filters(kind="DcimInterfaceL3", role__value="peer")
+    interfaces = await client.filters(kind="InterfacePhysical", role__value="peer")
     connector = await client.create(
         kind="DcimCable",
         connected_endpoints=interfaces,
@@ -366,12 +366,17 @@ async def create_link(client: InfrahubClient, log: logging.Logger, branch: str) 
     )
     await connector.save(allow_upsert=True)
 
-async def create_dropdowns(client: InfrahubClient, log: logging.Logger, branch: str) -> None:
+
+async def create_dropdowns(
+    client: InfrahubClient, log: logging.Logger, branch: str
+) -> None:
     for dropdown in DROPDOWNS:
         try:
-            await client.schema.add_dropdown_option(**dropdown)
-        except:
+            t = await client.schema.add_dropdown_option(**dropdown)
+        except Exception as e:
+            log.error(f"Failed to create dropdown option: {e}")
             pass
+
 
 async def run(
     client: InfrahubClient, log: logging.Logger, branch: str, **kwargs
