@@ -59,10 +59,6 @@ nodes:
             label: Deprecated
           - name: reserved
             label: Reserved
-          - name: peer
-            label: Peer
-          - name: office
-            label: Office
       - name: role
         kind: Dropdown
         optional: true
@@ -95,6 +91,14 @@ nodes:
             label: Loopback VTEP
             description: Facilitates virtualized network communications within loopback configurations.
             color: "#CDB4DB"
+          - name: peer
+            label: Peer
+            description: Represents a network used for peering connections.
+            color: "#F5B7B1"
+          - name: office
+            label: Office
+            description: Represents an office network.
+            color: "#F7DC6F"
     relationships:
       - name: organization
         peer: OrganizationGeneric
