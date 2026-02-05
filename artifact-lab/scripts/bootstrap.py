@@ -19,36 +19,6 @@ VLANS = [
         "site": "Rotterdam 1",
     },
 ]
-DROPDOWNS = [
-    {
-        "kind": "IpamPrefix",
-        "attribute": "role",
-        "option": "peer",
-        "label": "Peering",
-        "color": "#ff0000",
-    },
-    {
-        "kind": "IpamPrefix",
-        "attribute": "role",
-        "option": "office",
-        "label": "Office",
-        "color": "#ff1111",
-    },
-    {
-        "kind": "DcimInterface",
-        "attribute": "role",
-        "option": "host",
-        "label": "Host",
-        "color": "#02f4fc",
-    },
-    {
-        "kind": "DcimInterface",
-        "attribute": "role",
-        "option": "peer",
-        "label": "Peer",
-        "color": "#02f4fc",
-    },
-]
 
 PREFIXES = [
     {
@@ -367,22 +337,9 @@ async def create_link(client: InfrahubClient, log: logging.Logger, branch: str) 
     await connector.save(allow_upsert=True)
 
 
-async def create_dropdowns(
-    client: InfrahubClient, log: logging.Logger, branch: str
-) -> None:
-    for dropdown in DROPDOWNS:
-        try:
-            t = await client.schema.add_dropdown_option(**dropdown)
-        except Exception as e:
-            log.error(f"Failed to create dropdown option: {e}")
-            pass
-
-
 async def run(
     client: InfrahubClient, log: logging.Logger, branch: str, **kwargs
 ) -> None:
-    log.info("Generating dropdowns...")
-    await create_dropdowns(client=client, branch=branch, log=log)
     log.info("Generate all org related data...")
     await create_org(client=client, branch=branch, log=log)
 
